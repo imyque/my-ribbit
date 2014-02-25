@@ -28,6 +28,7 @@ public class RibbitApplication extends Application {
 		 
 		ParseAnalytics.trackEvent("read", dimensions);
 */		
+		
 	}
 
 }
