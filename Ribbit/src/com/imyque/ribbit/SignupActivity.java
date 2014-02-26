@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ public class SignupActivity extends Activity {
 	protected EditText mEmail;
 	protected Button mBtnSignUp;
 	protected ProgressBar mProgressBar; 
+	private SignUpCallback mSignUpCallback;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,35 @@ public class SignupActivity extends Activity {
 		mEmail = (EditText) findViewById(R.id.txtSignupEmail );
 		mBtnSignUp = (Button) findViewById(R.id.btnSignup);
 		
-		mBtnSignUp.setOnClickListener( new View.OnClickListener() {	
+		//Define Signup callback for Signup listener
+		mSignUpCallback = new SignUpCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				
+				mProgressBar.setVisibility(View.INVISIBLE);
+				
+				if (e == null) {
+					
+					//Hooray, new account created
+					Intent intent = new Intent(SignupActivity.this, MainActivity.class) ;
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					startActivity(intent);
+					
+				} else {
+					
+					Utility.okDialog(SignupActivity.this, R.string.error_title, e.getMessage() );
+					
+				}
+				
+			}
+		};
+		
+		//Define Signup listener for Signup button
+		OnClickListener signUpListener = new View.OnClickListener() {	
+			
+
 			@Override
 			public void onClick(View v) {
 				
@@ -52,7 +82,7 @@ public class SignupActivity extends Activity {
 				if (username.isEmpty() || email.isEmpty() || pwd.isEmpty() ) {
 					
 					mProgressBar.setVisibility(View.INVISIBLE);
-					Utility.okDialog(SignupActivity.this, R.string.signup_error_title, R.string.signup_error_message);
+					Utility.okDialog(SignupActivity.this, R.string.error_title, R.string.signup_error_message);
 					
 				} else {
 					
@@ -64,29 +94,7 @@ public class SignupActivity extends Activity {
 					
 					newUser.put("role", "data-entry");
 					
-					newUser.signUpInBackground( new SignUpCallback() {
-						
-						@Override
-						public void done(ParseException e) {
-							
-							mProgressBar.setVisibility(View.INVISIBLE);
-							
-							if (e == null) {
-								
-								//Hooray, new account created
-								Intent intent = new Intent(SignupActivity.this, MainActivity.class) ;
-								intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-								startActivity(intent);
-								
-							} else {
-								
-								Utility.okDialog(SignupActivity.this, R.string.signup_error_title, e.getMessage() );
-								
-							}
-							
-						}
-					});
+					newUser.signUpInBackground( mSignUpCallback);
 					
 					
 				}
@@ -95,7 +103,9 @@ public class SignupActivity extends Activity {
 				
 				
 			}
-		});
+		};
+		
+		mBtnSignUp.setOnClickListener( signUpListener);
 		
 	}
 

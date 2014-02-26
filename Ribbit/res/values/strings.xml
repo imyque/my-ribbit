@@ -16,6 +16,7 @@
     <string name="lbl_email">Email</string>
     <string name="lbl_signup">Sign up</string>
     <string name="signup_error_message">All fields are required</string>
-    <string name="signup_error_title">Signup Oops</string>
+    <string name="error_title">Oops</string>
+    <string name="mnu_lbl_logout">Logout</string>
 
 </resources>

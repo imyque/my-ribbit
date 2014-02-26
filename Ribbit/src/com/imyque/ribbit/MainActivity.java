@@ -11,16 +11,21 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.parse.ParseAnalytics;
+import com.parse.ParseUser;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+ActionBar.TabListener {
+
+	private static final String TAG = MainActivity.class.getSimpleName() ;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -41,13 +46,16 @@ public class MainActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		ParseAnalytics.trackAppOpened(getIntent());
+
+		ParseUser currentUser = ParseUser.getCurrentUser();
 		
-		Intent intent = new Intent(this, LoginActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		startActivity(intent);
+		if ( currentUser == null ) {
+			navigateToLogin();
+		} else {
+			Log.i(TAG, currentUser.getUsername()) ;
+		}
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -66,12 +74,12 @@ public class MainActivity extends FragmentActivity implements
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
 		// a reference to the Tab.
 		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
-					}
-				});
+		.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				actionBar.setSelectedNavigationItem(position);
+			}
+		});
 
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -85,12 +93,44 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	
+//-------- Utilities 
+	
+	private void navigateToLogin() {
+		Intent intent = new Intent(this, LoginActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		ParseUser.logOut();
+		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		int itemId = item.getItemId();
+		if (itemId == R.id.action_logout) {
+			ParseUser.logOut();
+			navigateToLogin();
+		}
+		
+		return super.onOptionsItemSelected(item);
+	
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
 
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
