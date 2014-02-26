@@ -51,4 +51,14 @@
         android:layout_marginTop="25dp"
         android:text="@string/lbl_signup" />
 
+    <ProgressBar
+        android:id="@+id/pbrSignup"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSignup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:visibility="invisible" />
+
 </RelativeLayout>
