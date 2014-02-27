@@ -49,6 +49,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/txtSignupPassword"
         android:layout_marginTop="25dp"
+        android:background="@android:drawable/btn_default_small"
         android:text="@string/lbl_signup" />
 
     <ProgressBar

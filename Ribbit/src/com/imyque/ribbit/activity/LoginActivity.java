@@ -1,16 +1,20 @@
-package com.imyque.ribbit;
+package com.imyque.ribbit.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.imyque.ribbit.R;
+import com.imyque.ribbit.Utility;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -29,6 +33,10 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Must come before set contentvwiw
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
 		setContentView(R.layout.activity_login);
 
 		mProgressBar = (ProgressBar) findViewById(R.id.pbrLogin);
@@ -43,6 +51,8 @@ public class LoginActivity extends Activity {
 			public void done(ParseUser user, ParseException e) {
 				
 				mProgressBar.setVisibility(View.INVISIBLE);
+				setProgressBarIndeterminateVisibility(false);
+				
 				if (e == null) {
 
 					//Hooray, login success
@@ -77,17 +87,24 @@ public class LoginActivity extends Activity {
 				username = username.trim();
 				pwd = pwd.trim();
 				
+				boolean isNetworkAvailable = Utility.isNetworkAvailable(  
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
 
 				if (username.isEmpty() || pwd.isEmpty() ) {
 
 					mProgressBar.setVisibility(View.INVISIBLE);
 					Utility.okDialog(LoginActivity.this, R.string.error_title, R.string.signup_error_message);
 
-				} else {
+				} else if ( !isNetworkAvailable) {
 
-					//Login
+					mProgressBar.setVisibility(View.INVISIBLE);
+					Utility.okDialog(LoginActivity.this, R.string.error_title, R.string.no_network_error_message);					
+					
+					
+				}	else {
+				
+					setProgressBarIndeterminateVisibility(true);
 					ParseUser.logInInBackground(username , pwd, mLoginCallback);
-
 
 				}
 
@@ -107,19 +124,23 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
+				mTxvSignUp.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+				mTxvSignUp.setTextColor(getResources().getColor(android.R.color.white)) ;
 				Intent intent = new Intent(LoginActivity.this, SignupActivity.class);  //Context is the login activity
 				startActivity(intent);
+				mTxvSignUp.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+				mTxvSignUp.setTextColor(getResources().getColor(android.R.color.holo_blue_dark)) ;
 
 			}
 		});
 	}
 
-
+/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
-
+*/
 }
