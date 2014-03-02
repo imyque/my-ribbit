@@ -16,7 +16,8 @@ public class InboxFragment extends ListFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_inbox,
-				container, false);
+				container, false); 
+				// always use false as the last parameter when attaching a fragment to an avtivity in code
 		
 		
 		return rootView;

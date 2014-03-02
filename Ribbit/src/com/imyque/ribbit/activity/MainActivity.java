@@ -4,16 +4,11 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.imyque.ribbit.R;
 import com.imyque.ribbit.activity.fragment.SectionsPagerAdapter;
@@ -58,11 +53,11 @@ ActionBar.TabListener {
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setSubtitle("Welcome " + currentUser.getUsername() );
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter( this, 
-				getSupportFragmentManager());
+		mSectionsPagerAdapter = new SectionsPagerAdapter( this, getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -71,8 +66,7 @@ ActionBar.TabListener {
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
 		// a reference to the Tab.
-		mViewPager
-		.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
 				actionBar.setSelectedNavigationItem(position);
@@ -113,9 +107,17 @@ ActionBar.TabListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		int itemId = item.getItemId();
+		
+		// Logout Action
 		if (itemId == R.id.action_logout) {
 			ParseUser.logOut();
 			navigateToLogin();
+			
+			// Edit Friends action
+		} else if (itemId == R.id.action_edit_friends) {
+			
+			Intent intent = new Intent(this, EditFriendsActivity.class) ;
+			startActivity(intent);
 		}
 		
 		return super.onOptionsItemSelected(item);
