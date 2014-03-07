@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 public class Utility {
 	
+	private static final String TAG = Utility.class.getSimpleName();
+
 	public static void okDialog(Context context, String title, String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		
@@ -52,7 +55,17 @@ public class Utility {
 		
 		
 		AlertDialog dialog = builder.create();
-		dialog.show();
+		try {
+			
+			dialog.show();
+			
+		} catch (Exception e) {
+			
+			Log.e(TAG, "Alert Dialog Error");
+			e.printStackTrace();
+			
+		}
+		
 	}
 	
 	public static boolean isNetworkAvailable(ConnectivityManager manager) {

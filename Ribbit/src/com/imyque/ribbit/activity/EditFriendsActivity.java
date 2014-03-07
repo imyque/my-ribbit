@@ -2,6 +2,7 @@ package com.imyque.ribbit.activity;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -161,7 +162,12 @@ public class EditFriendsActivity extends ListActivity {
 
 				} else {
 
-					handleError(e);
+					
+				
+						handleError(e);
+						
+					
+
 				}
 			}
 		};
@@ -223,8 +229,8 @@ public class EditFriendsActivity extends ListActivity {
 	}
 
 	private void handleError(ParseException e) {
-		Log.e(TAG, e.getMessage());
-		Utility.okDialog(EditFriendsActivity.this, R.string.error_title, e.getMessage() ) ;
+		Log.e(TAG, e.getMessage(), e);
+		Utility.okDialog(getListView().getContext(), R.string.error_title, e.getMessage() ) ;
 	}
 
 }
