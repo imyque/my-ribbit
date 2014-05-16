@@ -1,5 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/action_logout" android:title="@string/mnu_lbl_logout"></item>
-    <item android:id="@+id/action_edit_friends" android:title="@string/mnu_lbl_edit_friends"></item>
+
+    <item
+        android:id="@+id/action_camera"
+        android:showAsAction="always"
+        android:title="@string/mnu_lbl_camera">
+    </item>
+    <item
+        android:id="@+id/action_edit_friends"
+        android:title="@string/mnu_lbl_edit_friends">
+    </item>
+    <item
+        android:id="@+id/action_logout"
+        android:title="@string/mnu_lbl_logout">
+    </item>
 
 </menu>

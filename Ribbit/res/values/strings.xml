@@ -22,5 +22,6 @@
     <string name="lbl_empty_friends">No new friends, add friends to begin</string>
     <string name="mnu_lbl_edit_friends">Edit Friends</string>
     <string name="title_activity_edit_friends">Edit Friends</string>
+    <string name="mnu_lbl_camera">Camera</string>
 
 </resources>
